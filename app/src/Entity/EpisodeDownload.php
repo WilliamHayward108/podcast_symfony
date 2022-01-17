@@ -33,53 +33,41 @@ class EpisodeDownload
      */
     private $occured_at;
 
-    /**
-     * @return mixed
-     */
-    public function getEpisode()
+    public function __construct(Episode $episode, Podcast $podcast, \DateTimeImmutable  $occured_at)
     {
-        return $this->episode;
+        $this->episode = $episode;
+        $this->podcast = $podcast;
+        $this->occured_at = $occured_at;
     }
 
     /**
      * @param mixed $episode
      */
-    public function setEpisode($episode): void
+    public function setEpisode(Episode $episode): void
     {
         $this->episode = $episode;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     /**
      * @return mixed
      */
-    public function getPodcast()
+    public function getEpisode(): Episode
+    {
+        return $this->episode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPodcast(): Podcast
     {
         return $this->podcast;
     }
 
-    /**
-     * @param mixed $podcast
-     */
-    public function setPodcast($podcast): void
-    {
-        $this->podcast = $podcast;
-    }
 
-
-    public function getOccuredAt(): ?\DateTimeImmutable
+    public function getOccuredAt(): \DateTimeImmutable
     {
         return $this->occured_at;
     }
 
-    public function setOccuredAt(\DateTimeImmutable $occured_at): self
-    {
-        $this->occured_at = $occured_at;
-
-        return $this;
-    }
 }

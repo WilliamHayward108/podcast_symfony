@@ -41,45 +41,35 @@ class Episode
      */
     private $episode_downloads;
 
-    public function __construct()
+    public function __construct(string $name, \DateTimeImmutable $created_at, Podcast $podcast)
     {
         $this->episode_downloads = new ArrayCollection();
+        $this->name = $name;
+        $this->created_at = $created_at;
+        $this->podcast = $podcast;
     }
 
-    public function getPodcast(): ?Podcast
+    public function getPodcast(): Podcast
     {
         return $this->podcast;
     }
 
-    public function setPodcast(?Podcast $podcast): self
-    {
-        $this->podcast = $podcast;
-
-        return $this;
-    }
-
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    /**
+     * @param Podcast $podcast
+     */
+    public function setPodcast(Podcast $podcast): void
     {
-        $this->created_at = $created_at;
-
-        return $this;
+        $this->podcast = $podcast;
     }
 
     /**

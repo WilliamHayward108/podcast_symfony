@@ -14,11 +14,9 @@ class EpisodeFixtures extends Fixture implements DependentFixtureInterface
     {
         for ($i = 1; $i < 21; $i++)
         {
-            $episode = New Episode();
-            $episode->setName('episode '.$i);
-            $episode->setCreatedAt(new \DateTimeImmutable());
             $podcast_ref = $this->getReference('podcast ref-'.rand(1, 5));
-            $episode->setPodcast($podcast_ref);
+            $name = 'episode '.$i;
+            $episode = New Episode($name, new \DateTimeImmutable(), $podcast_ref);
             $this->addReference('episode-'.$i, $episode);
 
             $manager->persist($episode);

@@ -12,12 +12,8 @@ class EpisodeDownloadFixtures extends Fixture implements DependentFixtureInterfa
     public function load(ObjectManager $manager)
     {
         for($i = 0; $i < 10; $i++){
-            $download = new EpisodeDownload();
-            $download->setOccuredAt(new \DateTimeImmutable());
             $episode_ref = $this->getReference('episode-'.rand(1, 20));
-            $download->setEpisode($episode_ref);
-            $download->setPodcast($episode_ref->getPodcast());
-
+            $download = new EpisodeDownload($episode_ref, $episode_ref->getPodcast(), new \DateTimeImmutable());
             $manager->persist($download);
         }
         $manager->flush();

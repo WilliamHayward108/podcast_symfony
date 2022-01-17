@@ -21,6 +21,11 @@ class EpisodeDownloadsRepository extends ServiceEntityRepository
         parent::__construct($registry, EpisodeDownload::class);
     }
 
+    public function save(EpisodeDownload $episode_download){
+        $this->getEntityManager()->persist($episode_download);
+        $this->getEntityManager()->flush();
+    }
+
     public function getDownloadsWithinPeriodForEpisode(string $episode_id, int $day_period = 7): array
     {
         $uuid = Uuid::fromString($episode_id);

@@ -14,6 +14,7 @@ class EpisodeDownloadControllerTest extends WebTestCase
     private $client;
     private $podcast;
     private $manager;
+    private $episode_download_repository;
 
     public function setUp(): void
     {
@@ -22,6 +23,7 @@ class EpisodeDownloadControllerTest extends WebTestCase
 
         $this->episode = $this->manager->getRepository(Episode::class)->findOneBy(['name' => 'episode 1']);
         $podcast = $this->manager->getRepository(Podcast::class)->findOneBy(['name' => 'podcast 1']);
+        $this->episode_download_repository = $this->manager->getRepository(EpisodeDownload::class);
 
         $this->episode_uuid = $this->episode->getUuidString();
         $this->podcast = $podcast->getUuidString();
@@ -69,18 +71,13 @@ class EpisodeDownloadControllerTest extends WebTestCase
         //This test requires a new entity to be set up due to the day period on the repository function...
         //...without ensuring the entity was created when the test was ran we may get unintended results
         $date = new \DateTimeImmutable();
-        $episode_downloaded = new EpisodeDownload();
-        $episode_downloaded->setOccuredAt($date);
-        $episode_downloaded->setEpisode($this->episode);
-        $episode_downloaded->setPodcast($this->episode->getPodcast());
-        $this->manager->persist($episode_downloaded);
-        $this->manager->flush();
+        $episode_downloaded = new EpisodeDownload($this->episode, $this->episode->getPodcast(), $date);
+        $this->episode_download_repository->save($episode_downloaded);
 
         $crawler = $this->client->request('GET', '/getEpisodeStatistics/'.$this->episode_uuid);
         $response = $this->client->getResponse();
 
         $response_data = json_decode($response->getContent(), true);
-        dump($response_data['data']);
         $this->assertArrayHasKey($date->format('Y-m-d'), $response_data['data']);
     }
 }

@@ -12,9 +12,8 @@ class PodcastFixtures extends Fixture
     {
         for ($i = 1; $i < 6; $i++)
         {
-            $podcast = new Podcast();
-            $podcast->setName("podcast ". $i);
-            $podcast->setCreatedAt(new \DateTimeImmutable());
+            $name = "podcast ". $i;
+            $podcast = new Podcast($name, new \DateTimeImmutable());
             $this->addReference("podcast ref-".$i, $podcast);
             $manager->persist($podcast);
         }
