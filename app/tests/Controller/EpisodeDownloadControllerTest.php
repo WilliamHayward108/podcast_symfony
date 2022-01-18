@@ -71,13 +71,32 @@ class EpisodeDownloadControllerTest extends WebTestCase
         //This test requires a new entity to be set up due to the day period on the repository function...
         //...without ensuring the entity was created when the test was ran we may get unintended results
         $date = new \DateTimeImmutable();
-        $episode_downloaded = new EpisodeDownload($this->episode, $this->episode->getPodcast(), $date);
-        $this->episode_download_repository->save($episode_downloaded);
+        $date_plus_day = new \DateTimeImmutable('-1 day');
 
+        //Create two downloads on the same day, and one a day after
+        $episode_downloaded = new EpisodeDownload($this->episode, $this->episode->getPodcast(), $date);
+        $second_episode_downloaded = new EpisodeDownload($this->episode, $this->episode->getPodcast(), $date);
+        $third_episode_downloaded = new EpisodeDownload($this->episode, $this->episode->getPodcast(), $date_plus_day);
+
+        $this->episode_download_repository->save($episode_downloaded);
+        $this->episode_download_repository->save($second_episode_downloaded);
+        $this->episode_download_repository->save($third_episode_downloaded);
+
+        //Call controller and decode json response
         $crawler = $this->client->request('GET', '/getEpisodeStatistics/'.$this->episode_uuid);
         $response = $this->client->getResponse();
 
+        $this->assertResponseIsSuccessful();
+
+        //Decode response data
         $response_data = json_decode($response->getContent(), true);
+
+        //Check response has the array keys of the dates we created in Y-m-d  format
         $this->assertArrayHasKey($date->format('Y-m-d'), $response_data['data']);
+        $this->assertArrayHasKey($date_plus_day->format('Y-m-d'), $response_data['data']);
+        //Assert array values match expected download values
+        $this->assertCount(2, $response_data['data']);
+        $this->assertEquals(2, $response_data['data'][$date->format('Y-m-d')]);
+        $this->assertEquals(1, $response_data['data'][$date_plus_day->format('Y-m-d')]);
     }
 }
