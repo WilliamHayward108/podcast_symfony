@@ -33,29 +33,31 @@ class EpisodeDownloadsRepository extends ServiceEntityRepository
         $now = new \DateTime();
         $days_ago_period = new \DateTime($day_period.' days ago');
 
-        $qb = $this->createQueryBuilder('ed', 'ed.occured_at');
-        $qb->select('count(ed) as episode_count, ed.occured_at')
-            ->add('where', $qb->expr()->between(
-                    'ed.occured_at',
-                    ':days_ago',
-                    ':now'
-                ))
+        $qb = $this->createQueryBuilder('ed');
+        $qb->select('count(ed) as episode_count, DATE(ed.occured_at) as date')
+            ->where('(DATE(ed.occured_at) between :days_ago and :now)')
             ->andWhere('ed.episode = :episode_id')
             ->setParameter('episode_id', $uuid, 'uuid')
-            ->setParameter('days_ago', $days_ago_period)
-            ->setParameter('now', $now)
-            ->groupBy('ed.occured_at');
+            ->setParameter('days_ago', $days_ago_period->format('Y-m-d'))
+            ->setParameter('now', $now->format('Y-m-d'))
+            ->groupBy('date');
 
-        $query_result = $qb->getQuery()->getArrayResult();
+        $data = $qb->getQuery()->getArrayResult();
 
-        $formatted_result = [];
-
-        //Format out put so [downloaded_date] => times downloaded
-        foreach ($query_result as $key => $value){
-            $formatted_date = \DateTime::createFromFormat('Y-m-d H:i:s', $key)->format('Y-m-d');
-            $formatted_result[$formatted_date] = $value['episode_count'];
+        //No downloads found for episode/range so return
+        if(empty($data)){
+            return [];
         }
 
-        return $formatted_result;
+        $output = [];
+        foreach ($data as $datum)
+        {
+            //Check correct keys exist
+            if(isset($datum['episode_count']) && isset($datum['date'])){
+                $output[$datum['date']] = $datum['episode_count'];
+            }
+        }
+
+        return $output;
     }
 }

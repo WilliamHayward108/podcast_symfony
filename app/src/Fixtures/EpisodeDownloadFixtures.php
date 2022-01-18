@@ -11,9 +11,10 @@ class EpisodeDownloadFixtures extends Fixture implements DependentFixtureInterfa
 {
     public function load(ObjectManager $manager)
     {
+        //Change to use static dates for easier testing
         for($i = 0; $i < 10; $i++){
             $episode_ref = $this->getReference('episode-'.rand(1, 20));
-            $download = new EpisodeDownload($episode_ref, $episode_ref->getPodcast(), new \DateTimeImmutable());
+            $download = new EpisodeDownload($episode_ref, $episode_ref->getPodcast(), \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2022-01-01 12:00:00'));
             $manager->persist($download);
         }
         $manager->flush();

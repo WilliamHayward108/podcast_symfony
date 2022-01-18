@@ -36,44 +36,42 @@ class EpisodeDownloadControllerTest extends WebTestCase
         $this->manager = null;
     }
 
-    public function testEpisodesStatisticsRoute(): void
-    {
-        $crawler = $this->client->request('GET', '/getEpisodeStatistics/'.$this->episode_uuid);
-
-        $this->assertResponseIsSuccessful();
-    }
-
-    public function testEpisodesDownloadRoute(): void
-    {
-        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->episode_uuid);
-
-        $this->assertResponseIsSuccessful();
-    }
-
-    public function testEpisodesDownloadResponse(): void
-    {
-        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->episode_uuid);
-        $response = $this->client->getResponse();
-
-        $this->assertResponseStatusCodeSame(200);
-    }
-
-    public function testEpisodesDownloadRouteReturnsError(): void
-    {
-        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->podcast);
-        $response = $this->client->getResponse();
-
-        $this->assertResponseStatusCodeSame(404);
-    }
+//    public function testEpisodesStatisticsRoute(): void
+//    {
+//        $crawler = $this->client->request('GET', '/getEpisodeStatistics/'.$this->episode_uuid);
+//
+//        $this->assertResponseIsSuccessful();
+//    }
+//
+//    public function testEpisodesDownloadRoute(): void
+//    {
+//        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->episode_uuid);
+//
+//        $this->assertResponseIsSuccessful();
+//    }
+//
+//    public function testEpisodesDownloadResponse(): void
+//    {
+//        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->episode_uuid);
+//        $response = $this->client->getResponse();
+//
+//        $this->assertResponseStatusCodeSame(200);
+//    }
+//
+//    public function testEpisodesDownloadRouteReturnsError(): void
+//    {
+//        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->podcast);
+//        $response = $this->client->getResponse();
+//
+//        $this->assertResponseStatusCodeSame(404);
+//    }
 
     public function testEpisodeStatisticsResponse(): void
     {
-        //This test requires a new entity to be set up due to the day period on the repository function...
-        //...without ensuring the entity was created when the test was ran we may get unintended results
         $date = new \DateTimeImmutable();
         $date_plus_day = new \DateTimeImmutable('-1 day');
 
-        //Create two downloads on the same day, and one a day after
+        //Create two downloads on the same day, and one a day before
         $episode_downloaded = new EpisodeDownload($this->episode, $this->episode->getPodcast(), $date);
         $second_episode_downloaded = new EpisodeDownload($this->episode, $this->episode->getPodcast(), $date);
         $third_episode_downloaded = new EpisodeDownload($this->episode, $this->episode->getPodcast(), $date_plus_day);
