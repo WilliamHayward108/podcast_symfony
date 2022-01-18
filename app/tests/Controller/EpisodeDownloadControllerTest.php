@@ -16,7 +16,7 @@ class EpisodeDownloadControllerTest extends WebTestCase
     private $manager;
     private $episode_download_repository;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->client = static::createClient();
         $this->manager = $this->client ->getContainer()->get('doctrine')->getManager();
@@ -29,7 +29,7 @@ class EpisodeDownloadControllerTest extends WebTestCase
         $this->podcast = $podcast->getUuidString();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->manager->close();

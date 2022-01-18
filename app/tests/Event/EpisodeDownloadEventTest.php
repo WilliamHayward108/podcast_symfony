@@ -15,23 +15,24 @@ class EpisodeDownloadEventTest extends KernelTestCase
     private $manager;
     private $dispatcher;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $kernel = self::bootKernel();
 
         $this->manager = $kernel->getContainer()->get('doctrine')->getManager();
+        $episode_download_repository = $this->manager->getRepository(EpisodeDownload::class);
         $this->dispatcher = new EventDispatcher();
-        $this->dispatcher->addSubscriber(new EpisodeDownloadedSubscriber($this->manager));
+        $this->dispatcher->addSubscriber(new EpisodeDownloadedSubscriber($this->manager, $episode_download_repository));
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->manager->close();
         $this->manager = null;
     }
 
-    public function testDownloadEvent(): void
+    public function testDownloadEventSubscriber(): void
     {
         $episode = $this->manager->getRepository(Episode::class)->findOneBy(['name' => 'episode 1']);
         $date_time = new \DateTimeImmutable();

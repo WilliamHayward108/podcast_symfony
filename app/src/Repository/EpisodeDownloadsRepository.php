@@ -40,7 +40,8 @@ class EpisodeDownloadsRepository extends ServiceEntityRepository
             ->setParameter('episode_id', $uuid, 'uuid')
             ->setParameter('days_ago', $days_ago_period->format('Y-m-d'))
             ->setParameter('now', $now->format('Y-m-d'))
-            ->groupBy('date');
+            ->groupBy('date')
+            ->orderBy('date');
 
         $data = $qb->getQuery()->getArrayResult();
 
