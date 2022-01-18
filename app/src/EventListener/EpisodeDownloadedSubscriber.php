@@ -30,7 +30,7 @@ class EpisodeDownloadedSubscriber implements EventSubscriberInterface
 
     public function onEpisodeDownload(EpisodeDownloadEvent $event)
     {
-        $episode_download = new EpisodeDownload($event->getEpisode(), $event->getPodcast(), $event->getOccuredAt());
+        $episode_download = new EpisodeDownload($event->getEpisode(), $event->getOccuredAt());
 
         $this->episode_downloads_repository->save($episode_download);
     }

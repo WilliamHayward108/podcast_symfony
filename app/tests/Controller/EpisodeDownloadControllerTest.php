@@ -36,21 +36,21 @@ class EpisodeDownloadControllerTest extends WebTestCase
         $this->manager = null;
     }
 
-    public function testEpisodesStatisticsRoute(): void
+    public function testEpisodesStatisticsRouteValid(): void
     {
         $crawler = $this->client->request('GET', '/getEpisodeStatistics/'.$this->episode_uuid);
 
         $this->assertResponseIsSuccessful();
     }
 
-    public function testEpisodesDownloadRoute(): void
+    public function testEpisodesDownloadRouteValid(): void
     {
         $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->episode_uuid);
 
         $this->assertResponseIsSuccessful();
     }
 
-    public function testEpisodesDownloadResponse(): void
+    public function testEpisodesDownloadResponse200(): void
     {
         $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->episode_uuid);
         $response = $this->client->getResponse();
@@ -70,18 +70,19 @@ class EpisodeDownloadControllerTest extends WebTestCase
     {
         $date = new \DateTimeImmutable();
         $date_plus_day = new \DateTimeImmutable('-1 day');
+        $episode = $this->manager->getRepository(Episode::class)->findOneBy(['name' => 'episode 6']);
 
         //Create two downloads on the same day, and one a day before
-        $episode_downloaded = new EpisodeDownload($this->episode, $this->episode->getPodcast(), $date);
-        $second_episode_downloaded = new EpisodeDownload($this->episode, $this->episode->getPodcast(), $date);
-        $third_episode_downloaded = new EpisodeDownload($this->episode, $this->episode->getPodcast(), $date_plus_day);
+        $episode_downloaded = new EpisodeDownload($episode, $date);
+        $second_episode_downloaded = new EpisodeDownload($episode, $date);
+        $third_episode_downloaded = new EpisodeDownload($episode, $date_plus_day);
 
         $this->episode_download_repository->save($episode_downloaded);
         $this->episode_download_repository->save($second_episode_downloaded);
         $this->episode_download_repository->save($third_episode_downloaded);
 
         //Call controller and decode json response
-        $crawler = $this->client->request('GET', '/getEpisodeStatistics/'.$this->episode_uuid);
+        $crawler = $this->client->request('GET', '/getEpisodeStatistics/'.$episode->getUuidString());
         $response = $this->client->getResponse();
 
         $this->assertResponseIsSuccessful();

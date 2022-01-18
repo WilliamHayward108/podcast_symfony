@@ -32,9 +32,9 @@ class EpisodeDownloadEventTest extends KernelTestCase
         $this->manager = null;
     }
 
-    public function testDownloadEventSubscriber(): void
+    public function testDownloadEventSubscriberDownloadsEpisode(): void
     {
-        $episode = $this->manager->getRepository(Episode::class)->findOneBy(['name' => 'episode 1']);
+        $episode = $this->manager->getRepository(Episode::class)->findOneBy(['name' => 'episode 2']);
         $date_time = new \DateTimeImmutable();
 
 
@@ -43,13 +43,11 @@ class EpisodeDownloadEventTest extends KernelTestCase
 
         $episode_downloaded = $this->manager->getRepository(EpisodeDownload::class)->findBy([
             'episode' => $episode,
-            'podcast' => $episode->getPodcast(),
             'occured_at' => $date_time
         ]);
 
 
         $this->assertEquals($episode_downloaded[0]->getEpisode(), $episode);
-        $this->assertEquals($episode_downloaded[0]->getEpisode()->getPodcast(), $episode->getPodcast());
         $this->assertEquals($episode_downloaded[0]->getOccuredAt(), $date_time);
     }
 }

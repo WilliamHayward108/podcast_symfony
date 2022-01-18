@@ -31,13 +31,6 @@ class EpisodeDownloadEvent extends Event
         return $this->episode;
     }
 
-    /**
-     * @return Podcast
-     */
-    public function getPodcast(): Podcast
-    {
-        return $this->podcast;
-    }
 
     /**
      * @return \DateTimeImmutable

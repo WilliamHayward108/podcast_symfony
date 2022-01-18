@@ -32,17 +32,9 @@ class Podcast
      */
     private $episodes;
 
-    /**
-     * Each podcast can have many episode downloads
-     * @ORM\OneToMany(targetEntity=EpisodeDownload::class, mappedBy="podcast")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $episode_downloads;
-
     public function __construct(string $name, \DateTimeImmutable $created_at)
     {
         $this->episodes = new ArrayCollection();
-        $this->episode_downloads = new ArrayCollection();
         $this->name = $name;
         $this->created_at = $created_at;
     }
@@ -81,36 +73,6 @@ class Podcast
             // set the owning side to null (unless already changed)
             if ($episode->getPodcast() === $this) {
                 $episode->setPodcast(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|EpisodeDownload[]
-     */
-    public function getEpisodeDownloads(): Collection
-    {
-        return $this->episode_downloads;
-    }
-
-    public function addEpisodeDownload(EpisodeDownload $episode_download): self
-    {
-        if (!$this->episode_downloads->contains($episode_download)) {
-            $this->episode_downloads[] = $episode_download;
-            $episode_download->setPodcast($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEpisodeDownload(EpisodeDownload $episode_download): self
-    {
-        if ($this->episode_downloads->removeElement($episode_download)) {
-            // set the owning side to null (unless already changed)
-            if ($episode_download->getPodcast() === $this) {
-                $episode_download->setPodcast(null);
             }
         }
 

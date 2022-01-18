@@ -22,21 +22,13 @@ class EpisodeDownload
     private $episode;
 
     /**
-     * Each download can have one podcast
-     * @ORM\ManyToOne(targetEntity=Podcast::class, inversedBy="episode_downloads")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $podcast;
-
-    /**
      * @ORM\Column(type="datetime_immutable")
      */
     private $occured_at;
 
-    public function __construct(Episode $episode, Podcast $podcast, \DateTimeImmutable  $occured_at)
+    public function __construct(Episode $episode, \DateTimeImmutable $occured_at)
     {
         $this->episode = $episode;
-        $this->podcast = $podcast;
         $this->occured_at = $occured_at;
     }
 
@@ -54,14 +46,6 @@ class EpisodeDownload
     public function getEpisode(): Episode
     {
         return $this->episode;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPodcast(): Podcast
-    {
-        return $this->podcast;
     }
 
 

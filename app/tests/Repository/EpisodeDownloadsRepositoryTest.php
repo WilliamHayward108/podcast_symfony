@@ -31,9 +31,9 @@ class EpisodeDownloadsRepositoryTest extends KernelTestCase
     //Test saving and persisting functionality of an episode download
     public function testSave(): void
     {
-        $episode = $this->manager->getRepository(Episode::class)->findOneBy(['name' => 'episode 2']);
+        $episode = $this->manager->getRepository(Episode::class)->findOneBy(['name' => 'episode 3']);
         $date = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2022-02-01 01:00:00');
-        $episode_downloaded = new EpisodeDownload($episode, $episode->getPodcast(), $date);
+        $episode_downloaded = new EpisodeDownload($episode, $date);
 
         $this->episode_download_repository->save($episode_downloaded);
 
@@ -47,12 +47,12 @@ class EpisodeDownloadsRepositoryTest extends KernelTestCase
     //Test repository function is called and returns an array that contains the created episode download and its value
     public function testDownloadsWithinPeriodForEpisode(): void
     {
-        $episode = $this->manager->getRepository(Episode::class)->findOneBy(['name' => 'episode 3']);
+        $episode = $this->manager->getRepository(Episode::class)->findOneBy(['name' => 'episode 4']);
         $episode_uuid = $episode->getUuidString();
 
         //Newdate has to be created as date will have to be within 7 days (by default) to be returned
         $date = new \DateTimeImmutable();
-        $episode_downloaded = new EpisodeDownload($episode, $episode->getPodcast(), $date);
+        $episode_downloaded = new EpisodeDownload($episode, $date);
         $this->episode_download_repository->save($episode_downloaded);
 
         $result = $this->episode_download_repository->getDownloadsWithinPeriodForEpisode($episode_uuid);
@@ -67,12 +67,12 @@ class EpisodeDownloadsRepositoryTest extends KernelTestCase
     //Test that statistics function returns an empty array when episode to be found is older than date period
     public function testStatisticsFunctionReturnsEmpty(): void
     {
-        $episode = $this->manager->getRepository(Episode::class)->findOneBy(['name' => 'episode 4']);
+        $episode = $this->manager->getRepository(Episode::class)->findOneBy(['name' => 'episode 5']);
         $episode_uuid = $episode->getUuidString();
 
         //Newdate with date before 7 days
         $date = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2022-01-01 01:00:00');
-        $episode_downloaded = new EpisodeDownload($episode, $episode->getPodcast(), $date);
+        $episode_downloaded = new EpisodeDownload($episode, $date);
         $this->episode_download_repository->save($episode_downloaded);
 
         $result = $this->episode_download_repository->getDownloadsWithinPeriodForEpisode($episode_uuid);
