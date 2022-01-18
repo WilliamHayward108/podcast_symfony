@@ -36,35 +36,35 @@ class EpisodeDownloadControllerTest extends WebTestCase
         $this->manager = null;
     }
 
-//    public function testEpisodesStatisticsRoute(): void
-//    {
-//        $crawler = $this->client->request('GET', '/getEpisodeStatistics/'.$this->episode_uuid);
-//
-//        $this->assertResponseIsSuccessful();
-//    }
-//
-//    public function testEpisodesDownloadRoute(): void
-//    {
-//        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->episode_uuid);
-//
-//        $this->assertResponseIsSuccessful();
-//    }
-//
-//    public function testEpisodesDownloadResponse(): void
-//    {
-//        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->episode_uuid);
-//        $response = $this->client->getResponse();
-//
-//        $this->assertResponseStatusCodeSame(200);
-//    }
-//
-//    public function testEpisodesDownloadRouteReturnsError(): void
-//    {
-//        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->podcast);
-//        $response = $this->client->getResponse();
-//
-//        $this->assertResponseStatusCodeSame(404);
-//    }
+    public function testEpisodesStatisticsRoute(): void
+    {
+        $crawler = $this->client->request('GET', '/getEpisodeStatistics/'.$this->episode_uuid);
+
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testEpisodesDownloadRoute(): void
+    {
+        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->episode_uuid);
+
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testEpisodesDownloadResponse(): void
+    {
+        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->episode_uuid);
+        $response = $this->client->getResponse();
+
+        $this->assertResponseStatusCodeSame(200);
+    }
+
+    public function testEpisodesDownloadRouteReturnsError(): void
+    {
+        $crawler = $this->client->request('GET', '/episodeDownloaded/'.$this->podcast);
+        $response = $this->client->getResponse();
+
+        $this->assertResponseStatusCodeSame(404);
+    }
 
     public function testEpisodeStatisticsResponse(): void
     {
